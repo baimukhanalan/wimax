@@ -1,64 +1,148 @@
-# WIMAX
+<div align="center">
 
-Voice-first personal productivity OS for web, iOS, and Android. Record, import or forward a thought and WIMAX turns it into strict tasks, habits, financial transactions, confirmation-gated actions, connected knowledge, energy patterns, cited search results and audio briefings.
+# 🪞 WIMAX
 
-## Stack
+### Think out loud. Leave with clarity. — a voice-first OS for your tasks, habits, meetings &amp; knowledge.
 
-- Next.js 16 web dashboard and server API
-- Expo 57 mobile app for iOS and Android
-- OpenAI Audio Transcriptions + Responses API Structured Outputs
-- PostgreSQL with pgvector hybrid retrieval, transcript chapters and a dynamic knowledge graph
-- Shared Zod contracts across server, web, and mobile
-- Signed single-owner web sessions, native bearer authentication, durable rate limiting and auditable privacy workflows
-- iOS Siri/App Shortcut and Android one-tap capture widget
-- Background Meeting Mode with resumable checksummed upload and retryable diarized processing
-- Bidirectional Notion, Todoist and Google Calendar adapters plus on-device Apple Reminders
+_Also known as **Cognitive Mirror**._
 
-## Local setup
+[![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Expo](https://img.shields.io/badge/Expo_/_React_Native-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL_+_pgvector-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/)
+[![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white)](https://turbo.build/)
 
-1. Copy `.env.example` to `.env.local` and set private values locally. Never commit or paste them into chat.
-2. Generate separate random values for the API token, session secret and encryption key.
-3. Start PostgreSQL: `docker compose up -d`.
-4. Install and run:
+[![Live Demo](https://img.shields.io/badge/Live_Demo-▶_Open_App-22C55E?style=for-the-badge)](https://cognitive-mirror-two.vercel.app)
 
-   ```sh
-   pnpm install
-   pnpm dev:web
-   ```
+</div>
 
-5. For mobile, copy `apps/mobile/.env.example` to `apps/mobile/.env.local`, use your computer's LAN URL instead of `localhost` on a physical device, then run `pnpm dev:mobile`.
+---
 
-`pnpm dev:web` creates private ignored symlinks for the web environment; it never copies or prints secrets. Run `pnpm check` for the full lint, types, tests, web build and iOS/Android bundle gate.
+## 📖 About
 
-## Security boundary
+**WIMAX** is a voice-first operating system for personal effectiveness. Record,
+import, or forward a thought and WIMAX turns it into structured tasks, habits,
+financial entries, confirmation-gated actions, a connected knowledge graph,
+energy signals, cited search results, and audio briefings.
 
-- Browser capture is accepted only same-origin.
-- Production responses enforce CSP, HSTS, frame isolation, strict referrer handling, MIME sniffing protection, and a microphone-only Permissions Policy.
-- Public web access uses `MIRROR_WEB_ACCOUNT` (default `mirror`) plus `MIRROR_WEB_PASSWORD`. A signed HttpOnly device cookie remembers the account label for one year, but never authenticates on its own; returning devices still need the password after the seven-day signed session expires. `MIRROR_SESSION_SECRET` must be at least 32 bytes.
-- `/` is the public product landing page, `/desk` is the protected web app, `/downloads/cognitive-mirror-android.apk` serves the tested Android build, and `/download/ios` reports TestFlight readiness until Apple signing is complete.
-- Native mobile login exchanges the owner password for a signed, expiring bearer token. The token is stored in iOS Keychain/Android Keystore through Expo SecureStore; no server API token is compiled into the app.
-- Raw audio is transient by default. Set `MIRROR_STORE_ENCRYPTED_AUDIO=true` only with a 32-byte base64 `MIRROR_ENCRYPTION_KEY` to retain AES-256-GCM source audio for playback.
-- `.env*` files are ignored. Never send keys through chat or commit them.
-- Multi-account email/password sessions are enabled, API reads and writes are owner-scoped, and scheduled coaching, meeting processing, sync jobs and weekly briefings preserve each account owner. Database-enforced row-level security and optional social/OIDC login remain launch-hardening items before unrestricted public onboarding.
+Speech is transcribed with OpenAI Audio, then parsed into strict, schema-validated
+entities with the OpenAI Responses API. Everything is persisted in PostgreSQL with
+`pgvector` for hybrid semantic + lexical retrieval. The same [Zod](https://zod.dev/)
+contracts are shared across the server, web, and mobile clients, so the data shape
+is guaranteed end to end.
 
-## API
+> **Status &amp; honesty note:** The product scope is ambitious and some capabilities
+> are further along than others. Features below reflect what the code implements;
+> items that are partial or external-provider–gated live in the [Roadmap](#-roadmap),
+> not in the feature list. See `docs/PRODUCTION_SCOPE.md` for the per-feature release gates.
 
-`POST /api/capture` accepts either:
+## ✨ Features
 
-- `multipart/form-data`: `audio`, `current_datetime`, `source`
-- JSON: `{ "transcript": "...", "current_datetime": "ISO-8601", "source": "..." }`
+- 🎙️ **One-tap voice capture** on web, iOS, and Android — plus a text transcript fallback for deterministic testing.
+- 🧠 **Structured extraction** — one capture becomes tasks, habits, knowledge notes, financial transactions, commands, sentiment, and energy, all validated against shared schemas.
+- 🗓️ **Timezone-aware dates** — "next Tuesday" resolves against the capture's own timezone.
+- 📊 **Life dashboard** — persisted task timeline, habit streaks &amp; metrics, and energy/productivity heatmaps built from your captures.
+- 📝 **Weekly briefings &amp; coaching** — scheduled written and audio briefings, plus conservative, non-diagnostic three-day coaching signals.
+- 🔎 **Cited search** — answers that link back to the source capture and transcript segment.
+- 🕸️ **Knowledge graph** — automatic links between captures, projects, topics, and tags over `pgvector` embeddings.
+- 🔗 **Integrations** — bidirectional, idempotent adapters for **Notion**, **Todoist**, and **Google Calendar**, plus on-device **Apple Reminders**, behind a confirmation-gated execution layer.
+- 🎧 **Meeting Mode** — consent-gated long recording with a durable local queue, checksummed resumable uploads, and retryable server-side diarized processing.
+- 🔐 **Privacy by default** — raw audio is transient unless you opt into AES-256-GCM encrypted retention; signed per-account web sessions and scoped native bearer tokens stored in Keychain/Keystore.
 
-The response matches `captureResponseSchema` in `packages/contracts`.
+<!-- 📸 Screenshots: add images/GIFs of the Voice Command Desk, Reflective Journal, and mobile capture timeline here. -->
+<!-- Example: ![Voice Command Desk](docs/screenshots/desk.png) -->
 
-Meeting Mode uses `POST /api/meetings`, idempotent `PUT /api/meetings/:id/chunks/:index`, and `POST /api/meetings/:id/complete`. External commands are persisted first and run only through the explicit confirmation endpoint. The recurring meeting, sync, coaching, and weekly briefing workers require `CRON_SECRET`.
+## 🏗️ Architecture
 
-## Production operations
+A [pnpm](https://pnpm.io/) + [Turborepo](https://turbo.build/) monorepo:
 
-- Apply migrations with `DATABASE_URL=... pnpm db:migrate`.
-- Vercel runs the weekly briefing on Monday and daily retry workers for meetings, sync, and coaching; set `CRON_SECRET`. Meeting completion also starts processing immediately, so the daily worker is a recovery path rather than the primary path.
-- Optional Telegram and WhatsApp imports require provider tokens and webhook secrets only when those extra capture channels are enabled. They are not required for web or native voice capture.
-- ElevenLabs is optional; OpenAI TTS is the verified fallback.
-- `LOCAL_AI_BASE_URL` switches private captures to an OpenAI-compatible local runtime.
-- Native projects are authoritative because they contain the Android widget. After changing `app.json`, run Expo Prebuild and review the native diff before release.
+```
+wimax/
+├─ apps/
+│  ├─ web/          # Next.js 16 dashboard + server API (App Router, route handlers)
+│  │  ├─ app/       # /desk (app), /journal, /login, /register, /api/* route handlers
+│  │  └─ lib/       # capture, AI parsing, meetings, sync, coaching, security, db
+│  └─ mobile/       # Expo 57 / React Native app (iOS + Android, native widget module)
+├─ packages/
+│  └─ contracts/    # Shared Zod schemas + types (single source of truth)
+├─ infra/
+│  └─ migrations/   # Ordered SQL migrations (pgvector, meetings, sync, accounts)
+├─ scripts/         # link-web-env.mjs (local env symlinking)
+├─ docker-compose.yml  # PostgreSQL 17 + pgvector
+└─ turbo.json       # build / dev / lint / typecheck / test pipeline
+```
 
-See `docs/PRODUCTION_SCOPE.md` for verified release gates and the remaining external-provider/store acceptance work.
+The web app hosts both the UI and the HTTP API (`/api/capture`, `/api/meetings`,
+`/api/search`, `/api/integrations`, cron workers, and more). The mobile app talks
+to the same API over a signed bearer token.
+
+## 🧰 Tech Stack
+
+| Layer        | Technology |
+| ------------ | ---------- |
+| Web          | Next.js 16, React 19, TypeScript, Tailwind-free CSS, lucide-react |
+| Mobile       | Expo 57, React Native 0.86, expo-audio, SecureStore, background tasks |
+| Shared       | TypeScript, Zod 4 contracts package |
+| AI           | OpenAI Audio Transcriptions + Responses (Structured Outputs); optional local OpenAI-compatible runtime; ElevenLabs/OpenAI TTS |
+| Data         | PostgreSQL 17 + pgvector, `postgres` client, SQL migrations |
+| Tooling      | pnpm workspaces, Turborepo, Vitest, ESLint |
+| Deploy       | Vercel (web + cron) and docker-compose (local Postgres) |
+
+## 🚀 Getting Started
+
+**Prerequisites:** Node.js, [pnpm](https://pnpm.io/) 11+, Docker, and an OpenAI API key.
+
+```sh
+# 1. Install dependencies
+pnpm install
+
+# 2. Configure environment
+cp .env.example .env.local
+# Set OPENAI_API_KEY and generate separate random values for
+# MIRROR_API_TOKEN, MIRROR_SESSION_SECRET (>= 32 bytes), and MIRROR_ENCRYPTION_KEY.
+# Never commit secrets or paste them into chat.
+
+# 3. Start PostgreSQL (pgvector) and apply migrations
+docker compose up -d
+DATABASE_URL="postgresql://mirror:mirror@localhost:5432/mirror" pnpm db:migrate
+
+# 4. Run the web app
+pnpm dev:web      # http://localhost:3000  (/desk is the app)
+```
+
+For mobile, copy `apps/mobile/.env.example` to `apps/mobile/.env.local` (use your
+machine's LAN URL instead of `localhost` on a physical device), then:
+
+```sh
+pnpm dev:mobile
+```
+
+Run the full gate — lint, types, tests, web build, and iOS/Android bundle — with:
+
+```sh
+pnpm check
+```
+
+## 🗺️ Roadmap
+
+Honest view of what is partial or gated — see `docs/PRODUCTION_SCOPE.md` for detail.
+
+- [ ] Database-enforced PostgreSQL row-level security + optional social/OIDC login before unrestricted public onboarding
+- [ ] Apple/Google store signing, privacy disclosures, and live external-provider (Notion/Todoist/Calendar) end-to-end verification
+- [ ] Hosted tracing / error-reporting destination
+- [ ] Dedicated watch app / complication
+- [ ] Arbitrary always-listening wake phrase in an explicitly enabled, on-device private mode
+- [x] Core capture → structured extraction → dashboard pipeline
+- [x] Meeting Mode with resumable, diarized processing
+- [x] Multi-account sessions with owner-scoped reads/writes and background workers
+
+## 📄 License
+
+Released under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+<sub>Built with Next.js, Expo, and OpenAI · <a href="https://cognitive-mirror-two.vercel.app">Live Demo</a></sub>
+</div>
