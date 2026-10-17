@@ -1,0 +1,12 @@
+node_modules
+.turbo
+.vercel
+.env*
+artifacts
+apps/mobile
+apps/web/.next
+apps/web/coverage
+coverage
+dist
+*.log
+*.tsbuildinfo

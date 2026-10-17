@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "WIMAX",
+    "slug": "cognitive-mirror",
+    "version": "1.0.0",
+    "description": "A voice-first personal productivity system that turns thoughts into tasks, habits and connected knowledge.",
+    "icon": "./assets/icon.png",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "cognitivemirror",
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cognitivemirror.app",
+      "buildNumber": "1",
+      "icon": "./assets/icon.png",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSRemindersFullAccessUsageDescription": "WIMAX creates and synchronizes reminders only after you confirm a voice command.",
+        "NSRemindersUsageDescription": "WIMAX creates reminders only after you confirm a voice command."
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          }
+        ]
+      }
+    },
+    "android": {
+      "package": "com.cognitivemirror.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F7F8F6"
+      }
+    },
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "WIMAX uses the microphone while you capture a thought or explicitly start Meeting Mode.",
+          "enableBackgroundRecording": true
+        }
+      ],
+      "expo-font",
+      "expo-asset",
+      "expo-background-task",
+      [
+        "expo-notifications",
+        {
+          "mode": "production"
+        }
+      ],
+      "expo-secure-store"
+    ]
+  }
+}

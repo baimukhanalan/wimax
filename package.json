@@ -1,0 +1,20 @@
+{
+  "name": "cognitive-mirror",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "dev:web": "node scripts/link-web-env.mjs && pnpm --filter @cognitive-mirror/web dev",
+    "dev:mobile": "pnpm --filter @cognitive-mirror/mobile dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "typecheck": "turbo typecheck",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "db:migrate": "for migration in infra/migrations/*.sql; do psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f \"$migration\"; done"
+  },
+  "devDependencies": {
+    "turbo": "2.10.11",
+    "typescript": "5.9.3"
+  }
+}

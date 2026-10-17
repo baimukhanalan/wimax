@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="mirror_widget_capture">Start a WIMAX capture</string>
+  <string name="mirror_widget_description">One-tap voice capture for WIMAX</string>
+  <string name="mirror_widget_title">Capture a thought</string>
+  <string name="mirror_widget_subtitle">Tap once, then speak naturally</string>
+</resources>

@@ -1,0 +1,14 @@
+node_modules/
+.expo/
+.turbo/
+dist-ios/
+dist-android/
+ios/Pods/
+ios/build/
+android/.gradle/
+android/app/build/
+*.log
+.env
+.env.*
+!.env.example
+store/
